@@ -2,6 +2,7 @@ from flask import Flask,render_template, request, session, Response, redirect
 from database import connector
 from model import entities
 import json
+import time
 
 db = connector.Manager()
 engine = db.createEngine()
@@ -16,6 +17,27 @@ def index():
 def static_content(content):
     return render_template(content)
 
+@app.route('/authenticate', methods = ['POST'])
+def authenticate():
+    #Get data from request
+    time.sleep(8)
+    message = json.loads(request.data)
+    username = message['username']
+    password = message['password']
+    #look in database
+    db_session = db.getSession(engine)
+    try:
+        user = db_session.query(entities.User
+        ).filter(entities.User.username == username
+        ).filter(entities.User.password == password
+        ).one()
+        #return render_template("success.html")
+        message = {'message': 'Authorized'}
+        return Response(message, status=200, mimetype='application/json')
+    except Exception:
+        #return render_template("fail.html")
+        message = {'message': 'Unauthorized'}
+        return Response(message, status=401, mimetype='application/json')
 
 @app.route('/users', methods = ['GET'])
 def get_users():
