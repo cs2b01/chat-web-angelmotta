@@ -1,20 +1,20 @@
 function whoami(){
-        $.ajax({
-            url:'/current',
-            type:'GET',
-            contentType: 'application/json',
-            dataType:'json',
-            success: function(response){
-                alert(JSON.stringify(response));
-                $('#cu_username').html("Username: " + response['username'])
-                var name = response['name']+" "+response['fullname'];
-                $('#cu_name').html("Nombre: "+name);
-            },
-            error: function(response){
-                alert(JSON.stringify(response));
-            }
-        });
-    }
+    $.ajax({
+        url:'/current',
+        type:'GET',
+        contentType: 'application/json',
+        dataType:'json',
+        success: function(response){
+            alert(JSON.stringify(response));
+            var name = response['name']+" "+response['fullname'];
+            $('#cu_name').html("Nombre: "+name);
+            $('#cu_username').html("Username: " + response['username'])
+        },
+        error: function(response){
+            alert(JSON.stringify(response));
+        }
+    });
+}
 
 function allusers(){
     $.ajax({
@@ -63,4 +63,31 @@ function allmessages(){
     });
 }
 
-function showMessages(){}
+function showMessages(id_other_user){
+    //Serializing
+    var other_id = JSON.stringify({
+        "id": id_other_user
+    });
+    console.log(other_id)
+    $.ajax({
+        url:'/showmessages',
+        type:'POST',
+        contentType:'application/json',
+        data : other_id,
+        dataType:'json',
+        success: function(response){
+            //alert(JSON.stringify(response));
+            $('#allmessages').html("");
+            for(var i in response){
+                //console.log(response[i].content)
+                messages = '<div>'+ response[i].content + '</div>'
+                $('#allmessages').append(messages);
+            }
+            //$('#action').html(response['statusText']);
+        },
+        error: function(response){
+                alert("Error: no messages");
+                //$('#action').html(response['statusText']);
+        }
+    });
+}

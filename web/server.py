@@ -21,7 +21,7 @@ def static_content(content):
 @app.route('/authenticate', methods = ['POST'])
 def authenticate():
     #Get data from request
-    time.sleep(3)
+    time.sleep(1)
     message = json.loads(request.data)
     username = message['username']
     password = message['password']
@@ -127,8 +127,22 @@ def get_Message_id(id):
     js = json.dumps(data_messages, cls=connector.AlchemyEncoder)
     print(js)
     return  Response(js, status=200, mimetype='application/json')
-    message = { 'status': 404, 'message': 'Not Found'}
-    return Response(message, status=404, mimetype='application/json')
+
+@app.route('/showmessages/', methods = ['POST'])
+def show_Message_id():
+    db_session = db.getSession(engine)
+    my_id = session['logged_user']
+    message = json.loads(request.data)
+    other_id = message['id']
+    print("my_id: " + str(my_id) + " other_id: " + str(other_id))
+    dbResponse_messages = db_session.query(entities.Message).filter(or_((entities.Message.user_from_id == my_id) & (entities.Message.user_to_id == other_id),
+                                                                    (entities.Message.user_from_id == other_id) & (entities.Message.user_to_id == my_id)))
+    data_messages = []
+    for msg in dbResponse_messages:
+        data_messages.append(msg)
+    js = json.dumps(data_messages, cls=connector.AlchemyEncoder)
+    print(js)
+    return  Response(js, status=200, mimetype='application/json')
 
 @app.route('/messages', methods = ['POST'])
 def create_Message():
