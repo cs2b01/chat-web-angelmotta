@@ -172,7 +172,8 @@ def send_Message():
     db_session = db.getSession(engine)
     db_session.add(message)
     db_session.commit()
-    return Response(status=200)
+    response = {'message': 'created'}
+    return Response(json.dumps(response, cls=connector.AlchemyEncoder), status=200, mimetype='application/json')
 
 @app.route('/create_messages', methods = ['GET'])
 def create_test_messages():

@@ -118,6 +118,7 @@ function showMessages(id_other_user){
 function sendMessage(other_id){
     console.log(other_id);
     msg = $('#input_message').val();
+    $('#input_message').val('');
     var message = JSON.stringify({
         "user_to_id": other_id,
         "content": msg
@@ -129,17 +130,16 @@ function sendMessage(other_id){
         data : message,
         dataType:'json',
         success: function(){
-            //alert(JSON.stringify(response));
-            alert("Se envio mensaje");
+            alert("Mensaje enviado");
+            alert(JSON.stringify(response));
             //$('#allmessages').html("");
             //$('#action').html(response['statusText']);
         },
         error: function(response){
-                if(response['status'] === 401){
-                    alert('No se envio');
-                }
-                //alert("Error: Mensaje no enviado");
-                //$('#action').html(response['statusText']);
+            alert("Error al enviar Mensaje");
+            alert(JSON.stringify(response));
+            //alert("Error: Mensaje no enviado");
+            //$('#action').html(response['statusText']);
         }
     });
 }
