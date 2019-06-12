@@ -16,6 +16,26 @@ function whoami(){
     });
 }
 
+function currentId(){
+    var result_id="";
+    $.ajax({
+        url:'/current',
+        async: false,
+        type:'GET',
+        contentType: 'application/json',
+        dataType:'json',
+        success: function(response){
+            //alert(JSON.stringify(response));
+            result_id = response['id'];
+            console.log(result_id);
+        },
+        error: function(response){
+            alert(JSON.stringify(response));
+        }
+    });
+    return result_id;
+}
+
 function allusers(){
     $.ajax({
         url:'/users',
@@ -64,6 +84,9 @@ function allmessages(){
 }
 
 function showMessages(id_other_user){
+    console.log(id_other_user);
+    $('#enviarMsg').on("click", function () {sendMessage(id_other_user);});
+    //$("#enviarMsg").off('click').on('click', sendMessage(id_other_user))
     //Serializing
     var other_id = JSON.stringify({
         "id": id_other_user
@@ -87,6 +110,35 @@ function showMessages(id_other_user){
         },
         error: function(response){
                 alert("Error: no messages");
+                //$('#action').html(response['statusText']);
+        }
+    });
+}
+
+function sendMessage(other_id){
+    console.log(other_id);
+    msg = $('#input_message').val();
+    var message = JSON.stringify({
+        "user_to_id": other_id,
+        "content": msg
+    });
+    $.ajax({
+        url:'/sendmessage',
+        type:'POST',
+        contentType:'application/json',
+        data : message,
+        dataType:'json',
+        success: function(){
+            //alert(JSON.stringify(response));
+            alert("Se envio mensaje");
+            //$('#allmessages').html("");
+            //$('#action').html(response['statusText']);
+        },
+        error: function(response){
+                if(response['status'] === 401){
+                    alert('No se envio');
+                }
+                //alert("Error: Mensaje no enviado");
                 //$('#action').html(response['statusText']);
         }
     });

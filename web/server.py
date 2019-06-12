@@ -105,7 +105,7 @@ def create_test_users():
     db_session.commit()
     return "Test user created!"
 
-## Messages Methods
+## Messages Methods ##
 @app.route('/messages', methods = ['GET'])
 def get_Message():
     session = db.getSession(engine)
@@ -156,6 +156,23 @@ def create_Message():
     session.add(message)
     session.commit()
     return 'Created Message'
+
+@app.route('/sendmessage', methods = ['POST'])
+def send_Message():
+    myid = session['logged_user']
+    print("imprime:")
+    print(myid)
+    c = json.loads(request.data)
+    print(c)
+    message = entities.Message(
+        content=c['content'],
+        user_from_id=myid,
+        user_to_id=c['user_to_id'],
+    )
+    db_session = db.getSession(engine)
+    db_session.add(message)
+    db_session.commit()
+    return Response(status=200)
 
 @app.route('/create_messages', methods = ['GET'])
 def create_test_messages():
