@@ -11,33 +11,22 @@
 <input type="button" value="whoami" onclick="whoami()">
 <input type="button" value="allusers" onclick="allusers()">
 
-<table width="100%">
-    <div>
-        <label id="cu_username"></label>
-        <br/>
-        <label id="cu_name"></label>
-    </div>
-</table>
 <table width="100%" border="1px solid">
     <tr>
         <td width="25%">
-            Usuarios
+            <div class="alert alert-primary" role="alert">
+                <label id="cu_username"></label>
+                <br/>
+                <label id="cu_name"></label>
+            </div>
             <div id="allusers">
 
             </div>
-
         </td>
         <td width="75%">
-            Mensajes
             <div id="allmessages">
-
             </div>
-        </td>
-    </tr>
-    <tr>
-        <td width="25%"></td>
-        <td width="75%">
-            <div class="input-group">
+            <div>
                 <textarea id="input_message" placeholder="Write a message here..." cols="50" rows="2" ></textarea>
                 <button id="enviarMsg" type="button">Enviar</button>
             </div>
